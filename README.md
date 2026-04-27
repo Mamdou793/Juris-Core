@@ -1,22 +1,27 @@
-# Juris-Core
+# Juris-Omni Core: Legal Analyst Agentic Platform
 
-An Agentic RAG (Retrieval-Augmented Generation) Legal Assistant built with **Azure AI Search**, **OpenAI GPT-4o-mini**, and **Streamlit**.
+An enterprise-grade Legal RAG (Retrieval-Augmented Generation) platform built with a multi-agent architecture to ensure high-fidelity document analysis and verification.
 
-## Architecture
-Juris-Omni-Core uses a multi-agent orchestration pattern to ensure high-fidelity legal analysis:
-- **Researcher Agent:** Performs vector search across indexed legal documents.
-- **Analyst Agent:** Synthesizes findings with mandatory inline citations.
-- **Critic Agent:** A deterministic "Zero-Trust" layer that validates the Analyst's output against the raw source text to prevent hallucinations.
+## Key Features
+* **Multi-Agent Workflow:** Utilizes a **Researcher-Analyst-Critic** loop. The Critic agent cross-verifies all claims against retrieved context to eliminate hallucinations.
+* **In-App Ingestion (The Scaler):** Streamlined sidebar uploader that parses PDFs/Docs into Markdown using **Azure Document Intelligence** and indexes them into **Azure AI Search**.
+* **Persistent Cloud Memory:** Full chat history persistence using **Azure Cosmos DB (NoSQL)**, allowing session recovery across browser refreshes.
+* **High-Fidelity RAG:** Hybrid search capabilities using Azure OpenAI embeddings.
 
-## Tech Stack
-- **Orchestration:** Python (Sequential Agentic Chain)
-- **LLM:** Azure OpenAI (GPT-4o-mini & Text-Embedding-3-Small)
-- **Vector Store:** Azure AI Search (HNSW Algorithm)
-- **UI:** Streamlit
-- **Document Processing:** Azure AI Document Intelligence
+## Technical Architecture
+* **Frontend:** Streamlit
+* **Orchestration:** Python (Custom Agent Logic)
+* **LLMs:** Azure OpenAI (GPT-4o)
+* **Vector Database:** Azure AI Search
+* **Document Parsing:** Azure AI Document Intelligence (v4.0 Preview)
+* **Session State:** Azure Cosmos DB
 
-## Getting Started
-1. **Environment:** Setup your `.env` with Azure credentials (see `.env.example`).
-2. **Ingest:** Place documents in `data/raw` and run `python scripts/ingest_docs.py`.
-3. **Index:** Run `python scripts/vectorize_docs.py` to populate the vector store.
-4. **Launch:** Run `streamlit run app.py`.
+## Setup
+1. Clone the repository.
+2. Create a `.env` file based on the provided environment variables (Azure OpenAI, Search, Cosmos, and Doc Intel).
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+
+## Run The Application
+streamlit run app.py
