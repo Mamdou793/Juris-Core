@@ -1,4 +1,4 @@
-# Juris Core: Secure Legal Analyst Agentic Platform with Security Dashboard
+# Juris Core: Secure Legal Analyst Agentic Platform With Security Dashboard
 
 An enterprise-grade Legal RAG (Retrieval-Augmented Generation) platform built with a multi-agent architecture to ensure high-fidelity document analysis and verification with Security & Integrity Dashboard.
 
@@ -14,7 +14,7 @@ An enterprise-grade Legal RAG (Retrieval-Augmented Generation) platform built wi
 ## Technical Architecture
 * **Frontend:** Streamlit
 * **Orchestration:** Python (Custom Agent Logic)
-* **LLMs:** Azure OpenAI (GPT-4o)
+* **LLMs:** Azure OpenAI (GPT-4o-mini)
 * **Vector Database:** Azure AI Search
 * **Document Parsing:** Azure AI Document Intelligence (v4.0 Preview)
 * **Session State:** Azure Cosmos DB
