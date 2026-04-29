@@ -1,6 +1,6 @@
 # Juris-Omni Core: Secure Legal Analyst Agentic Platform
 
-An enterprise-grade Legal RAG (Retrieval-Augmented Generation) platform built with a multi-agent architecture to ensure high-fidelity document analysis and verification.
+An enterprise-grade Legal RAG (Retrieval-Augmented Generation) platform built with a multi-agent architecture to ensure high-fidelity document analysis and verification with Security & Integrity Dashboard.
 
 ## Key Features
 * **Multi-Agent Workflow:** Utilizes a **Researcher-Analyst-Critic** loop. The Critic agent cross-verifies all claims against retrieved context to eliminate hallucinations.
