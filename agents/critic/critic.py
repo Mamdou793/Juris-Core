@@ -1,16 +1,17 @@
 import os
-from dotenv import load_dotenv
 from openai import AzureOpenAI
 
-load_dotenv()
-
 class CriticAgent:
-    def __init__(self):
+    def __init__(self, openai_key: str = None):
+        # Fallback to env for development, but 'openai_key' from Vault takes priority
+        o_key = openai_key or os.getenv("AZURE_OPENAI_KEY")
+        
         self.gpt_client = AzureOpenAI(
-            api_key=os.getenv("AZURE_OPENAI_KEY"),
+            api_key=o_key,
             api_version="2024-06-01",
             azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
         )
+        # Model deployment is configuration, not a secret, so env is perfect here
         self.model = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT")
 
     def review_response(self, question: str, context: str, draft: str) -> str:
@@ -39,7 +40,7 @@ class CriticAgent:
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": user_content}
             ],
-            temperature=0 # We want the Critic to be robotic and precise
+            temperature=0 # Consistency is key for a critic
         )
         
         return response.choices[0].message.content
