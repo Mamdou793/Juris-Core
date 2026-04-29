@@ -89,3 +89,30 @@ class HistoryService:
             if stored_hash != calculated_hash:
                 return False, f"Integrity Breach detected at {item['timestamp']}!"
         return True, "All records verified authentic."
+    
+    def get_audit_logs(self, session_id):
+        """Returns a simplified list of messages with their verification status."""
+        if not self.client: return []
+        
+        query = "SELECT c.role, c.timestamp, c.audit_hash, c.content FROM c WHERE c.session_id = @session_id ORDER BY c.timestamp DESC"
+        params = [{"name": "@session_id", "value": session_id}]
+        
+        items = list(self.container.query_items(query=query, parameters=params, enable_cross_partition_query=False))
+        
+        audit_report = []
+        for item in items:
+            # 1. Decrypt for verification
+            decrypted_content = self._decrypt(item['content'])
+            
+            # 2. Re-calculate hash to check for tampering
+            calculated_hash = self._create_fingerprint(decrypted_content, item['timestamp'], item['role'])
+            is_valid = (item['audit_hash'] == calculated_hash)
+            
+            audit_report.append({
+                "Timestamp": item['timestamp'],
+                "Role": item['role'],
+                "Status": "✅ Verified" if is_valid else "🛑 TAMPERED",
+                "Encrypted_Preview": f"{item['content'][:20]}...",
+                "Decrypted_Preview": f"{decrypted_content[:20]}..."
+            })
+        return audit_report
