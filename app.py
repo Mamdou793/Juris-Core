@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 import time
+import uuid
 import pandas as pd
 from dotenv import load_dotenv
 from agents.researcher.researcher import ResearcherAgent
@@ -75,6 +76,11 @@ with st.sidebar:
 # 4. State Management
 if "session_id" not in st.session_state:
     st.session_state.session_id = "user_default_session"
+    
+# 4. State Management
+if "session_id" not in st.session_state:
+    # Generates a unique, private ID for each user's browser tab
+    st.session_state.session_id = str(uuid.uuid4())
     
 if "messages" not in st.session_state:
     cloud_history = history.get_history(st.session_state.session_id)

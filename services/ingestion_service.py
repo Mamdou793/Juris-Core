@@ -2,6 +2,7 @@ import os
 import time
 from azure.ai.documentintelligence import DocumentIntelligenceClient
 from azure.search.documents import SearchClient
+from azure.storage.blob import BlobServiceClient
 from azure.core.credentials import AzureKeyCredential
 from openai import AzureOpenAI
 
@@ -32,11 +33,33 @@ class IngestionService:
             azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
         )
         
-        # Deployment names remain as env vars because they aren't 'secrets' (they are config)
         self.embedding_model = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT")
+        
+        # 4. Azure Blob Storage Setup
+        connect_str = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
+        self.blob_service_client = None
+        self.container_name = "juris-documents"
+        
+        if connect_str:
+            try:
+                self.blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+                # Ensure container exists
+                container_client = self.blob_service_client.get_container_client(self.container_name)
+                if not container_client.exists():
+                    container_client.create_container()
+            except Exception:
+                pass # Already exists or connection failed
 
     def process_and_upload(self, file_content, filename):
-        # 1. Analyze with Document Intelligence (Now using the vaulted credentials)
+        # 1. Save original file to Azure Blob Storage if connected
+        if self.blob_service_client:
+            blob_client = self.blob_service_client.get_blob_client(
+                container=self.container_name, 
+                blob=filename
+            )
+            blob_client.upload_blob(file_content, overwrite=True)
+
+        # 2. Analyze with Document Intelligence
         poller = self.doc_client.begin_analyze_document(
             model_id="prebuilt-layout",
             analyze_request=file_content,
@@ -46,7 +69,7 @@ class IngestionService:
         result = poller.result()
         md_content = result.content
 
-        # 2. Chunking Logic
+        # 3. Chunking Logic
         chunks = [md_content[i:i+4000] for i in range(0, len(md_content), 4000)]
         
         batch = []
@@ -65,6 +88,6 @@ class IngestionService:
                 "content_vector": embedding
             })
 
-        # 3. Upload to Azure Search
+        # 4. Upload to Azure Search
         self.search_client.upload_documents(documents=batch)
         return len(batch)
