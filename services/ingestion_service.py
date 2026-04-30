@@ -3,7 +3,8 @@ import time
 import uuid
 from azure.ai.documentintelligence import DocumentIntelligenceClient
 from azure.search.documents import SearchClient
-from azure.search.documents.models import (
+from azure.search.documents.indexes import SearchIndexClient
+from azure.search.documents.indexes.models import (
     SearchIndex,
     SearchField,
     SearchFieldDataType,
