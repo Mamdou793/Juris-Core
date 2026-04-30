@@ -64,7 +64,7 @@ with st.sidebar:
             with st.spinner(f"Analyzing {uploaded_file.name}..."):
                 file_bytes = uploaded_file.read()
                 num_chunks = ingestor.process_and_upload(file_bytes, uploaded_file.name)
-                st.success(f"Indexed {num_chunks} chunks!")
+                st.success(f"Indexed {num_chunks} chunks and backed up to Azure Blob Storage!")
                 time.sleep(2)
                 st.rerun()
 
@@ -73,10 +73,6 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-# 4. State Management
-if "session_id" not in st.session_state:
-    st.session_state.session_id = "user_default_session"
-    
 # 4. State Management
 if "session_id" not in st.session_state:
     # Generates a unique, private ID for each user's browser tab
