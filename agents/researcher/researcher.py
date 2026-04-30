@@ -51,7 +51,7 @@ class ResearcherAgent:
                 search_text=query, # Provides the Keyword component
                 vector_queries=[vector_query], # Provides the Vector component
                 query_type=QueryType.SEMANTIC, # Activates the Semantic Ranker
-                semantic_configuration_name="default", # ENSURE THIS MATCHES YOUR PORTAL NAME
+                semantic_configuration_name="mySemanticConfig", # Updated to point to our custom configuration
                 query_answer=QueryAnswerType.EXTRACTIVE, # AI tries to find a direct answer string
                 query_caption=QueryCaptionType.EXTRACTIVE, # Highlight relevant snippets
                 top=top_k
